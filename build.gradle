@@ -21,50 +21,66 @@ artifacts {
     archives javadocJar
 }
 
-def pomConfig = {
-    licenses {
-        license {
-            name "The Apache Software License, Version 2.0"
-            url "http://www.apache.org/licenses/LICENSE-2.0.txt"
-            distribution "repo"
-        }
-    }
-    developers {
-        developer {
-            id "danielbustamante"
-            name "Daniel Bustamante Ospina"
-            email "dbustamantee69@gmail.com"
-        }
-    }
-
-    scm {
-        url "git@github.com:uPet/upet-identifications.git"
-    }
-}
 
 publishing {
-    publications {
-        MyPublication(MavenPublication) {
-            from components.java
-            artifact sourcesJar {
-                classifier "sources"
-            }
-            artifact javadocJar {
-                classifier "javadoc"
-            }
-            groupId 'co.upet.commons'
-            artifactId 'async-reporter'
-            version '1.0.2'
-            pom.withXml {
-                def root = asNode()
-                root.appendNode('description', 'Async Reporter')
-                root.appendNode('name', 'async-reporter')
-                root.appendNode('url', 'https://site_for_lib.tld')
-                root.children().last() + pomConfig
+    repositories {
+        maven {
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/upet/upet-java-telemetry-commons")
+            credentials {
+                username = project.property('gpr.user') ?: System.getenv("GITHUB_ACTOR")
+                password = project.property('gpr.key') ?: System.getenv("GITHUB_TOKEN")
             }
         }
     }
+    publications {
+        gpr(MavenPublication) {
+            from(components.java)
+        }
+    }
 }
+
+//def pomConfig = {
+//    licenses {
+//        license {
+//            name "The Apache Software License, Version 2.0"
+//            url "http://www.apache.org/licenses/LICENSE-2.0.txt"
+//            distribution "repo"
+//        }
+//    }
+//    developers {
+//        developer {
+//            id "danielbustamante"
+//            name "Daniel Bustamante Ospina"
+//            email "dbustamantee69@gmail.com"
+//        }
+//    }
+//
+//}
+
+//publishing {
+//    publications {
+//        MyPublication(MavenPublication) {
+//            from components.java
+//            artifact sourcesJar {
+//                classifier "sources"
+//            }
+//            artifact javadocJar {
+//                classifier "javadoc"
+//            }
+//            groupId 'co.upet.commons'
+//            artifactId 'async-reporter'
+//            version '1.0.2'
+//            pom.withXml {
+//                def root = asNode()
+//                root.appendNode('description', 'Async Reporter')
+//                root.appendNode('name', 'async-reporter')
+//                root.appendNode('url', 'https://site_for_lib.tld')
+//                root.children().last() + pomConfig
+//            }
+//        }
+//    }
+//}
 
 
 dependencies {
